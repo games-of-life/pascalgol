@@ -1,0 +1,3 @@
+[submodule "Raylib.4.0.Pascal"]
+	path = Raylib.4.0.Pascal
+	url = https://github.com/sysrpl/Raylib.4.0.Pascal.git
