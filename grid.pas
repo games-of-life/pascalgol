@@ -3,42 +3,95 @@ unit Grid;
 interface
 
 type
-   TCellState =  (dead, alive);
+   TCellState = (dead, alive);
 
-   TGrid = Object
-       x, y : integer;
-       field : array of array of TCellState;
+   TGrid = object
+       private
+           width, height : integer;
+           field : array of array of TCellState;
+           function CalculateNeighbors(i, j : integer) : integer;
 
-       function GetElem(_x, _y : integer) : TCellState;
+       public
+           constructor initRandom(_width, _height : integer; prob : real);
 
-       constructor Init(_x, _y : integer);
-       destructor CleanUp();
+           function getElem(i, j : integer) : TCellState;
+           procedure setElem(i, j : integer; val : TCellState);
+           procedure runGOLStep();
+
+           destructor deInit();
    end;
 
 implementation
 
-function TGrid.GetElem(_x, _y : integer ) : TCellState;
-begin
-   GetElem := field[_x][_y];
-end;
-
-constructor TGrid.Init(_x, _y : integer);
+constructor TGrid.initRandom(_width, _height : integer; prob : real);
 var
-   i, j : integer;
+   i, j        : integer;
+   ChosenState : TCellState;
 begin
-   x := _x;
-   y := _y;
-   SetLength(field, x, y);
-   for i := 0 to x - 1 do
-   begin
-      for j := 0 to y - 1 do
+   randomize;
+   width := _width;
+   height := _height;
+   SetLength(field, width, height);
+   for i := 0 to width - 1 do
+      for j := 0 to height - 1 do
       begin
-         field[i][j] := dead;
+
+         if random < prob then
+            ChosenState := alive
+         else
+            ChosenState := dead;
+
+         field[i][j] := ChosenState;
       end;
-   end;
 end;
 
-destructor TGrid.CleanUp();
+function TGrid.getElem(i, j : integer) : TCellState;
+begin
+   GetElem := field[i, j];
+end;
+
+procedure TGrid.SetElem(i, j : integer; val : TCellState);
+begin
+   field[i, j] := val;
+end;
+
+function TGrid.CalculateNeighbors(i, j : integer) : integer;
+var
+   i_cor, j_cor : integer;
+begin
+   CalculateNeighbors := 0;
+   for i_cor := i - 1 to i + 1 do
+      for j_cor := j - 1 to j + 1 do
+         if (not (((i_cor = i) and (j_cor = j))
+                 or (i_cor < 0) or (j_cor < 0)
+                 or (i_cor >= width) or (j_cor >= height)))
+            and (alive = getElem(i_cor, j_cor)) then
+              inc(CalculateNeighbors);
+end;
+
+procedure TGrid.runGOLStep();
+var
+   newField    : array of array of TCellState;
+   i, j, neigh : integer;
+begin
+   setLength(newField, width, height);
+
+   for i := 0 to width - 1 do
+      for j := 0 to height - 1 do
+      begin
+         neigh := CalculateNeighbors(i, j);
+         if (3 = neigh) or ((2 = neigh) and (alive = GetElem(i, j))) then
+            newField[i, j] := alive
+         else
+            newField[i, j] := dead;
+      end;
+
+   setLength(field, 0, 0);
+   field := newField;
+end;
+
+
+destructor TGrid.deInit();
 begin
    SetLength(field, 0, 0);
 end;
