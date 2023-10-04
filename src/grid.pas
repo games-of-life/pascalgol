@@ -41,7 +41,7 @@ begin
          else
             ChosenState := dead;
 
-         field[i][j] := ChosenState;
+         field[i, j] := ChosenState;
       end;
 end;
 
@@ -50,12 +50,12 @@ begin
    GetElem := field[i, j];
 end;
 
-procedure TGrid.SetElem(i, j : integer; val : TCellState);
+procedure TGrid.setElem(i, j : integer; val : TCellState);
 begin
    field[i, j] := val;
 end;
 
-function TGrid.CalculateNeighbors(i, j : integer) : integer;
+function TGrid.calculateNeighbors(i, j : integer) : integer;
 var
    i_cor, j_cor : integer;
 begin
