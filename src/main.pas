@@ -13,7 +13,7 @@ var
    gr       : TGrid;
    curColor : TColorB;
 begin
-   gr.initRandom(BOX_WIDTH, BOX_HEIGHT, 0.5);
+   gr.InitRandom(BOX_WIDTH, BOX_HEIGHT, 0.5);
 
    InitWindow(WIDTH, HEIGHT, 'Game of life');
    { SetTargetFPS(60); }
@@ -28,7 +28,7 @@ begin
          for j := 0 to BOX_HEIGHT - 1 do
          begin
 
-            if gr.getElem(i, j) = alive then
+            if gr.GetElem(i, j) = alive then
                curColor := WHITE
             else
                curColor := BLACK;
@@ -40,10 +40,10 @@ begin
       end;
 
       DrawFPS(10, 10);
-      gr.runGOLStep;
+      gr.RunGOLStep;
       EndDrawing;
    end;
 
-   gr.deInit;
+   gr.DeInit;
    CloseWindow;
 end.

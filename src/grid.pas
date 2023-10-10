@@ -12,18 +12,18 @@ type
            function CalculateNeighbors(i, j : integer) : integer;
 
        public
-           constructor initRandom(_width, _height : integer; prob : real);
+           constructor InitRandom(_width, _height : integer; prob : real);
 
-           function getElem(i, j : integer) : TCellState;
-           procedure setElem(i, j : integer; val : TCellState);
-           procedure runGOLStep();
+           function GetElem(i, j : integer) : TCellState;
+           procedure SetElem(i, j : integer; val : TCellState);
+           procedure RunGOLStep();
 
-           destructor deInit();
+           destructor DeInit();
    end;
 
 implementation
 
-constructor TGrid.initRandom(_width, _height : integer; prob : real);
+constructor TGrid.InitRandom(_width, _height : integer; prob : real);
 var
    i, j        : integer;
    ChosenState : TCellState;
@@ -45,17 +45,17 @@ begin
       end;
 end;
 
-function TGrid.getElem(i, j : integer) : TCellState;
+function TGrid.GetElem(i, j : integer) : TCellState;
 begin
    GetElem := field[i, j];
 end;
 
-procedure TGrid.setElem(i, j : integer; val : TCellState);
+procedure TGrid.SetElem(i, j : integer; val : TCellState);
 begin
    field[i, j] := val;
 end;
 
-function TGrid.calculateNeighbors(i, j : integer) : integer;
+function TGrid.CalculateNeighbors(i, j : integer) : integer;
 var
    i_cor, j_cor : integer;
 begin
@@ -65,16 +65,16 @@ begin
          if (not (((i_cor = i) and (j_cor = j))
                  or (i_cor < 0) or (j_cor < 0)
                  or (i_cor >= width) or (j_cor >= height)))
-            and (alive = getElem(i_cor, j_cor)) then
+            and (alive = GetElem(i_cor, j_cor)) then
               inc(CalculateNeighbors);
 end;
 
-procedure TGrid.runGOLStep();
+procedure TGrid.RunGOLStep();
 var
    newField    : array of array of TCellState;
    i, j, neigh : integer;
 begin
-   setLength(newField, width, height);
+   SetLength(newField, width, height);
 
    for i := 0 to width - 1 do
       for j := 0 to height - 1 do
@@ -86,7 +86,7 @@ begin
             newField[i, j] := dead;
       end;
 
-   setLength(field, 0, 0);
+   SetLength(field, 0, 0);
    field := newField;
 end;
 
